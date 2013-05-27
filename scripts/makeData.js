@@ -34,10 +34,30 @@ function loadFolder() {
 	loadNextData(dir);
 }
 function allCountriesLoaded() {
+	output = "";
+	var keys = Object.keys(countries[0]);
+	_.each(keys, function(key, keyIndex) {
+		output += key;
+		if(keyIndex != keys.length - 1) {
+			output += ',';
+		}
+	})
+	output += "\n";
 	_.each(countries, function(country) {
 	//	console.log(country.country);
+		ln = "";
+		_.each(keys, function(key, keyIndex) {
+			ln += country[key];
+			if(keyIndex != keys.length - 1) {
+				ln += ',';
+			}
+		})
+		output += ln +"\n";
 	})
-	console.log(countries);
+
+	console.log(output);
+	fs.writeFile(dataPath + "countries.csv", output);
+
 }
 function loadNextData(dir) {
 	var numData = dataToLoad.length;

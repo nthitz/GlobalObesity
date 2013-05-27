@@ -1,0 +1,159 @@
+country,age,fObese,fOver,mObese,mOver,size,years,region
+Algeria,25-64,21.4,32 ,8.8,27.5 ,4112 ,2003 ,africa
+Burundi,15-49,1.6,5.9 ,,,4015 ,2010 ,africa
+Benin,15-49,5.8,13.2 ,,,2874 ,2006 ,africa
+Burkina Faso,15-49,2.4,6.9 ,,,10604 ,2003 ,africa
+Cameroon,15-49,8.2,20.6 ,,,4419 ,2004 ,africa
+Cameroon (urban),15+,19.5,28.6 ,6.5,21.6 ,9454 ,2003 ,africa
+Central African Republic,15-49 ,1.1,5.5 ,,,2025 ,1994/95 ,africa
+Chad,15-49 ,1.5,6.1 ,,,3720 ,2004 ,africa
+Comoros,15-49 ,4.4,15.9 ,,,773 ,1996 ,africa
+Congo (the),25+ ,14.6,21.8 ,2.5,15.2 ,2100 ,2004 ,africa
+Cote d'Ivoire,15-49 ,4.7,14.5 ,,,1299 ,1998/9 ,africa
+Democratic Republic of the Congo (the),15-49 ,2.4,8.9 ,,,409 ,2007 ,africa
+Eritrea,15-64 ,3.7,13.7 ,3.7,13.7 ,2352 ,2004 ,africa
+Ethiopia,15-49 ,1,4.7 ,,,14381 ,2011 ,africa
+Gabon,15-49 ,8.2,21.3 ,,,2190 ,2000 ,africa
+Ghana,15-49 ,9.3,20.7 ,,,4380 ,2008 ,africa
+Guinea,15-49 ,3.2,11.6 ,,,3451 ,2005 ,africa
+Kenya,15-49 ,7.2,17.9 ,,,7548 ,2009 ,africa
+Liberia,15-49 ,5.7,14.8 ,,,6057 ,2007 ,africa
+Lesotho,20-49 ,23.7,27.2 ,,,3682 ,2009 ,africa
+Madagascar,15-49,1.2,5.1 ,,,7520 ,2008/9 ,africa
+Malawi,15-49,2.4,13.1 ,,,6684 ,2010 ,africa
+Maldives,15-49,13.1,32.4 ,,,5173 ,2009 ,africa
+Mali,15-49,5.2,12.4 ,,,12010 ,2006 ,africa
+Mauritiana,15-49,19.2,23.5 ,,,5259 ,2000/01 ,africa
+Mauritius,25-74,20.0,34.0 ,8.0,33.0 ,6291 ,1998 ,africa
+Mozambique,15-49,3.9,10.3 ,,,10239 ,2003 ,africa
+Namibia,15-49,11.7,16.4 ,,,8803 ,2006/7 ,africa
+Nicaragua,15-49,18,30.2 ,,,11838 ,2001 ,africa
+Niger,15-49,3.2,9.8 ,,,3765 ,2006 ,africa
+Nigeria,15-49,6,16.1 ,,,28,200 ,2008 ,africa
+Rwanda,15-49,2.2,14.1 ,0.2,3.4 ,12034 ,2010 ,africa
+Sao Tome & Principie,15-49,12.2,21.5 ,,,2004 ,2008/9 ,africa
+Senegal,15-49,5.8,15.5 ,1,6.1 ,9183 ,2010/11 ,africa
+Seychelles,25-64,34.2,33 ,14.7,37 ,1255 ,2004 ,africa
+Sierra Leone,15-49,9.3,20.4 ,,,3104 ,2008 ,africa
+South Africa,15+,27.4,27.5 ,8.8,21 ,7756 ,2003 ,africa
+Tanzania,15-49,6.2,, ,,8789 ,2010 ,africa
+Togo,15-49,2.4,9.0,,,3029 ,1998 ,africa
+Uganda,15-49,4.2,14.6,0.6,3.8 ,4572 ,2011 ,africa
+Zambia,15-49,2.4,7.9,,,3629 ,2001/2 ,africa
+Zimbabwe,15-49,10.6,20.7,1.8,7.1 ,14669 ,2010/11 ,africa
+Argentina (urban),18-65 ,17.5,10.8,19.5,24.6 ,1100 ,2003 ,america
+Bahamas,15-64 ,28.0,25.6,13.9,29.1 ,1771 ,1988-89 ,america
+Barbados,n/a ,31,28,10,15 ,n/a ,1991 ,america
+Bolivia,15-49 ,17.4,32.3,,,15325 ,2008 ,america
+Brazil,20+ ,13.1,26.9,8.9,32.2 ,93329 ,2003 ,america
+Canada,20-69 ,23.5,23.7,27.6,42.8 ,3072 ,2007-9 ,america
+Chile,17+ ,29.3,32.7,19.6,43.2 ,3619 ,2003 ,america
+Colombia,15-49 ,15.2,31.1,,,43723 ,2010 ,america
+Cuba,20-64 ,10.2,26.7,7.1,25.1 ,4197 ,1998 ,america
+Dominican R,15-49 ,38,38,,,7866 ,2002 ,america
+Guatemala,18-49 ,14.0,33.4,,,2318 ,1998/9 ,america
+Guyana,20+ ,26.9,30.7,14.3 ,26.0 ,1315 ,2000 ,america
+Haiti,15-49 ,6.3,14.9,,,4897 ,2005/6 ,america
+Honduras,15-49 ,18.8,27.8,,,17856 ,2005/6 ,america
+Jamaica,15+ ,23.9,30.3,7.6 ,24.7 ,1935 ,1999 ,america
+Mexico,20+ ,34.5,37.4,24.2 ,42.5 ,33624 ,2006 ,america
+Nicaragua,15-49 ,18,30.2,,,11838 ,2001 ,america
+Panama,15-93 ,36.1,33.4,27.9 ,30.9 ,875 ,2000 ,america
+Paraguay,20-74 ,35.7,36.1,22.9 ,41.6 ,1606 ,1991-92 ,america
+Peru (urban),15-49 ,14.6,34.4,,,20192 ,2007-8 ,america
+St Lucia,25-74 ,28.7,,8.4 ,,1084 ,1991-94 ,america
+Trinidad & Tobago,20+ ,21.1,32.6 ,10.7 ,29.6 ,803 ,1999 ,america
+USA,20+ ,35.8,27.9 ,35.5 ,38.4 ,5926 ,2009/10 ,america
+Uruguay (Urban) Self Report,18+ ,18.0,30.0 ,17.0 ,40.0 ,900 ,1998 ,america
+Venezuela,20+ ,26.4,33.9 ,25 ,34.8 ,3159 ,1999-2001 ,america
+Bahrain,19+ ,34.1,28.3 ,23.3 ,36.7 ,2301 ,1998-9 ,emed
+Egypt,15-59 (m) 15-49 (f) ,39.5,28.3 ,18.2 ,34.3 ,11258 ,2008 ,emed
+Iran,15-64 ,19.2,29.3 ,9.1 ,27.9 ,89404 ,2005,emed
+Jordan,15-49 ,28.7,27.8 ,,,6666 ,2009,emed
+Kuwait,20-64 ,47.9,29.5 ,36.4 ,37.2 ,2280 ,2006,emed
+Morocco,15-49 ,11,25.7 ,,,15818 ,2003/4,emed
+Morocco,20+ ,21.7,29.8 ,8.2 ,25.5 ,1797 ,2000,emed
+Oman,20+ ,23.8,27.3 ,16.7 ,32.1 ,6400 ,2000,emed
+Pakistan,15+ ,7.3,11.3 ,4 ,8.5 ,8972 ,1990-4,emed
+Palestine,30-65 ,42.5,,23.9 ,,936 ,n/a,emed
+Qatar,25-65 ,45.3,33.0,34.6 ,34.3,1208 ,2003,emed
+Saudi Arabia,30+ ,44.0,31.8,26.4 ,42.4,17223 ,1995-2000,emed
+Tunisia,35-70 ,37,34.1,13.3 ,38.4,5343 ,2005,emed
+UAE,20-79 ,31.4,28.4,17.1 ,36.7,1286 ,2000,emed
+Yemen,15-49 ,4.0,11.1,,,5479 ,1997,emed
+Albania,15-49,9.7,29.6,8.5,44.8 ,10302 ,2008/9 ,europe
+Armenia,15-49,15.5,26.9,,,6016 ,2005 ,europe
+Austria,30-74,20.8,32.4,23.3,42.3 ,1054 ,2005/6 ,europe
+Azerbaijan,15-49,17.9,29.5,4.3,35.8 ,9881 ,2006 ,europe
+Belgium,18-75,10.2,29.8,10.7,41.4 ,5170 ,2002-4 ,europe
+Bosnia & Herzegovina,25-64,25,,17,,2750 ,2002 ,europe
+Bulgaria,20+,19.2,32.2,13.4,39.6,1031 ,2004 ,europe
+Croatia,18+,22.7,38.7,21.6,46.7,9040 ,2003 ,europe
+Cyprus,25-64,23.7,34.3,26.6,46.0,1019 ,1999-2000 ,europe
+Czech Republic,20+,22.3,29.2,23.9,42.8,1942 ,2008 ,europe
+Denmark (self report),16+,11.8,25.6,11.8,41.4,13593 ,2005 ,europe
+England,16+,26.1,31.7,26.2,41.6,6987 ,2010 ,europe
+Estonia (self report),16-64,14.9,25.7,13.7,32.0,3033 ,2004 ,europe
+Finland (self report),15+,13.5,26.7,14.9,44.8,3287 ,2005 ,europe
+France,18-74,17.6,23.8,16.1,41,3115 ,2006 ,europe
+Germany,18-80,21.1,29.5,20.5,45.5,,2005-7 ,europe
+Greece,18-79,25.6,29.3,27.9,50.8,915,2001-3 ,europe
+Hungary (self report),18+,18.2,31.3,17.1,41.8,1179,2004 ,europe
+Iceland,18+,18.3,35.2,17.0,47.3,6178,1991-6 ,europe
+Israel,25-64,25.7,33.1,19.9,45.8,2782,1999-2001 ,europe
+Ireland,18-64,21.3,30.9,25.8,43.8,1500,2008-10 ,europe
+Ireland (Northern),16+,23,30 ,25,39 ,3378 ,2005-6,europe
+Italy (self report),n/a,9.1,26.1 ,10.5,42.5 ,n/a ,2005,europe
+Italy,35-74,22,,18,,n/a ,1998,europe
+Kazakstan,15-49,12.6,9.9 ,,,2235 ,1999,europe
+Kyrgystan,18-59,10.7,24.3 ,4.2,26.4 ,4053 ,1993,europe
+Latvia (self report),15-64,18.1,27.5 ,12.3,32.3 ,1538 ,2006,europe
+Lithuania (self report),20-64,19.2,29.7 ,20.6,35.7 ,1707 ,2006,europe
+Luxembourg,n/a,19,44 ,21,62 ,n/a ,2007,europe
+Malta (self report),15+,16.9,34.3 ,22.9,46.5 ,,2003,europe
+Moldova,15-49,18.2,23.3 ,,,7062 ,2005,europe
+Netherlands,20-59,10.1,28.5 ,10.4,43.5 ,3691 ,1998-2002,europe
+Norway,n/a,21.0,40.0 ,15.5,53.2 ,66140 ,1995-97,europe
+Poland,20+,23.8,28.4 ,20.8,40.3 ,14403 ,2003-7,europe
+Portugal,18-64,13.4,34.4 ,15,45.2 ,8116 ,2003-5,europe
+Romania (self report),15+,9.5,28.6 ,7.7,38.1 ,21000 ,2000,europe
+Russia,19-55,21.6,27.4 ,10.3,30.7 ,9006 ,2000,europe
+Scotland,16+,27.6,32.0 ,27.7,41.5 ,6103 ,2011,europe
+Serbia (Republic of ),20+,20,31 ,14.3,43 ,4458 ,2000,europe
+Slovak Republic,15+,15.9,24.4 ,18.1,39.5 ,n/a ,2007,europe
+Slovenia (self report),25-64,13.8,30.9 ,16.5,50.0 ,9034 ,2001,europe
+Spain,18+,21.4,32.5 ,24.4,46.4 ,12036 ,2008/10,europe
+Sweden (Goteborg),25-64,11.0,26.6 ,14.8,43.5 ,1032 ,2002,europe
+Switzerland (self report),15+,7.7,20.9 ,8.6,37.8 ,n/a ,2007,europe
+Turkey (Urban),20+ ,29.4,28.6 ,16.5,46.5 ,5016 ,2001-2 ,europe
+Turkmenistan,15-49 ,7.8,16.0 ,,,2117 ,2000 ,europe
+Uzbekistan,18-59 (males) 18-49 (females) ,7.1,20.6 ,5.4 ,26.5 ,1657 ,2002 ,europe
+Wales n(self report),16+,22.0,31.0 ,22.0 ,40.0 ,16058 ,2011 ,europe
+Bangladesh,15-49 ,1.7,10.1 ,,,10021 ,2007 ,seasia
+India ,15-49 ,2.8,9.8 ,1.3 ,8,177523 ,2005/6,seasia
+Indonesia ,20+ ,4.5,17.4 ,1.3 ,10.2 ,20593 ,2000/1,seasia
+Nepal ,15-49 ,2.2,11.2 ,,,5800 ,2011,seasia
+Thailand,18+ ,9.1,25.2 ,4.7 ,17.7 ,39290 ,2004,seasia
+Australia,25+,24,30.9 ,25.6,42.1 ,16601 ,2007/8 ,wpacific
+Brunei Darussalam,Adults,13.9,45.0 ,12.9,44.0 ,n/a ,1997-99 ,wpacific
+Cambodia,15-49,1.3,9.6 ,,,8757 ,2010 ,wpacific
+China,18+,4.4,25.5 ,3.8,25.7 ,8315 ,2009 ,wpacific
+Cook Island,20+,,,40.6,36.0 ,132** ,1998 ,wpacific
+Fiji,18+,21,29 ,7,25 ,2573 ,1993 ,wpacific
+French Polynesia,16+,44.3,28.2 ,36.3,38.9 ,1273 ,1995 ,wpacific
+Hong Kong,25-74,7,27 ,5,33 ,2875 ,1995/6 ,wpacific
+Japan,20+,3.4,17.8 ,2.3,24.5 ,15000 ,2000 ,wpacific
+Korea (South),15-79,3.0,23.4 ,1.6,22.0 ,8816 ,1998 ,wpacific
+Malaysia,18+,22.5,33.1 ,14.1,34.4 ,4428 ,2007/8 ,wpacific
+Marshall Islands,18+,31.0,29.0 ,21.0,29.0 ,1582 ,2003,wpacific
+Mongolia,15-64,12.5,25.5 ,7.2,18.2 ,3411 ,2005 ,wpacific
+Nauru,15-64,60.5,21.8 ,55.7,26.5 ,2254 ,2004 ,wpacific
+New Zealand,≥15,26,29.4 ,24.7,40.7 ,12488 ,2006/7 ,wpacific
+Niue, 20+,46.0,38.0 ,15.0,34.0 ,740 ,1987 ,wpacific
+Philippines,20+,4.4,18.9 ,2.1,14.9 ,9299 ,1998 ,wpacific
+Samoa,29+,63.0,,32.9,,588 ,1995 ,wpacific
+Singapore,18-69,9.5,,12.1,,n/a ,2010 ,wpacific
+Tonga,15-85,70.3,22.7,46.6,37.4,1024 ,1998-2000 ,wpacific
+Timor Leste,15-49,0.8,4.3,,,11698,2009-10,wpacific
+Vanuatu,20+,19.6,32.2,12.2,33.6,1614,1998,wpacific
+Vietnam,19+,6.6,6.6,4.4,4.4,,2001/2,wpacific
