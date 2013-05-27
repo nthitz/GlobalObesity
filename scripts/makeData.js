@@ -47,7 +47,7 @@ function allCountriesLoaded() {
 	//	console.log(country.country);
 		ln = "";
 		_.each(keys, function(key, keyIndex) {
-			ln += country[key];
+			ln += country[key].trim();
 			if(keyIndex != keys.length - 1) {
 				ln += ',';
 			}
