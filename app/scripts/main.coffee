@@ -30,4 +30,4 @@ countriesCSVLoaded = (err, data) ->
 	).enter().append('td').text(String)
 	d3.select('.container table').insert('tr',':first-child').selectAll('td').data(keys)
 		.enter().append('td').text(String)
-d3.csv 'data/countries.csv', countriesCSVLoaded
+d3.tsv 'data/countries.tsv', countriesCSVLoaded
