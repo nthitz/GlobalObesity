@@ -39,7 +39,7 @@ function allCountriesLoaded() {
 	_.each(keys, function(key, keyIndex) {
 		output += key;
 		if(keyIndex != keys.length - 1) {
-			output += ',';
+			output += "\t";
 		}
 	})
 	output += "\n";
@@ -49,14 +49,14 @@ function allCountriesLoaded() {
 		_.each(keys, function(key, keyIndex) {
 			ln += country[key].trim();
 			if(keyIndex != keys.length - 1) {
-				ln += ',';
+				ln += "\t"
 			}
 		})
 		output += ln +"\n";
 	})
 
 	console.log(output);
-	fs.writeFile(dataPath + "countries.csv", output);
+	fs.writeFile(dataPath + "countries.tsv", output);
 
 }
 function loadNextData(dir) {

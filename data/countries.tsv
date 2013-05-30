@@ -1,4 +1,4 @@
-country,age,fObese,fOver,mObese,mOver,size,years,region
+country	age	fObese	fOver	mObese	mOver	size	years	region
 Algeria	25-64	21.4	32	8.8	27.5	4112	2003	africa
 Burundi	15-49	1.6	5.9			4015	2010	africa
 Benin	15-49	5.8	13.2			2874	2006	africa
