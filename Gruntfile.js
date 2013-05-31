@@ -308,7 +308,7 @@ module.exports = function (grunt) {
         }
 
         grunt.task.run([
-            'bower',
+            //'bower',
             'clean:server',
             'concurrent:server',
             'connect:livereload',
