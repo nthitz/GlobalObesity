@@ -3,16 +3,24 @@ countriesCSVLoaded = (err, data) ->
 	numericCols = [
 		"fObese","fOver", "mObese", "mOver",
 	]
+	keys = Object.keys(data[0])
+	keys.push('fTotal');
+	keys.push('mTotal');
+	filteredData = []
 	for datum in data
+		include = true
 		for key in numericCols
 			strVal = datum[key]
 			numericVal = + strVal
+			if numericVal is 0
+				include = false
 			datum[key] = numericVal
 			datum[key + "Str"] = strVal
 		datum['fTotal'] = datum['fObese'] + datum['fOver']
 		datum['mTotal'] = datum['mObese'] + datum['mOver']
-
-	keys = Object.keys(data[0])
+		if include
+			filteredData.push(datum)
+	data = filteredData
 	console.log keys
 	console.log data
 	data.sort (b,a) ->
