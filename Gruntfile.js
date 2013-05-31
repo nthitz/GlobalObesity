@@ -24,6 +24,7 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
         yeoman: yeomanConfig,
+        
         watch: {
             options: {
                 nospawn: true
@@ -293,6 +294,11 @@ module.exports = function (grunt) {
                 'svgmin',
                 'htmlmin'
             ]
+        },
+        bower: {
+            target: {
+                rjsConfig: 'app/config.js'
+            }
         }
     });
 
@@ -302,6 +308,7 @@ module.exports = function (grunt) {
         }
 
         grunt.task.run([
+            'bower',
             'clean:server',
             'concurrent:server',
             'connect:livereload',
@@ -318,6 +325,7 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('build', [
+        'bower',
         'clean:dist',
         'useminPrepare',
         'concurrent:dist',
@@ -332,6 +340,7 @@ module.exports = function (grunt) {
     grunt.registerTask('default', [
         'jshint',
         'test',
+
         'build'
     ]);
 };

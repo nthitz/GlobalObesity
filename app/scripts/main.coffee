@@ -1,11 +1,9 @@
 console.log 'hey'
+countryData = null
 countriesCSVLoaded = (err, data) ->
 	numericCols = [
 		"fObese","fOver", "mObese", "mOver",
 	]
-	keys = Object.keys(data[0])
-	keys.push('fTotal');
-	keys.push('mTotal');
 	filteredData = []
 	for datum in data
 		include = true
@@ -21,13 +19,17 @@ countriesCSVLoaded = (err, data) ->
 		if include
 			filteredData.push(datum)
 	data = filteredData
-	console.log keys
+	
 	console.log data
+	countryData = data
+	#displayTable()
+
+displayTable = () ->
+	data = countryData
+
+	keys = Object.keys(data[0])
 	data.sort (b,a) ->
 		return (a['mTotal'] - a['fTotal']) - (b['mTotal'] - b['fTotal'])
-		return (a['mObese'] - a['fObese']) - (b['mObese'] - b['fObese'])
-		comparator = 'mObese'
-		return a[comparator]  - b[comparator]
 	trs = d3.select('.container').append('table').selectAll('tr').data(data)
 	trs.enter().append('tr')
 	trs.selectAll('td').data((d) ->
