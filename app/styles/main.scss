@@ -87,6 +87,27 @@ circle {
     stroke:black;
   }
 }
+
+.controls {
+  .region {
+    list-style-type:none;
+    li {
+      float: left;
+      margin:0;
+      padding: 2px 10px;
+      border-radius: 4px;
+      background-color: #ddd;
+      border: 1px solid black;
+      &.active {
+        background-color: green;
+      }
+    }
+    li + li {
+      margin-left:10px;
+    }
+  }
+}
+
 @media screen and (-webkit-min-device-pixel-ratio:0) and (min-width: 1024px) {
   html {
     overflow-y:auto;

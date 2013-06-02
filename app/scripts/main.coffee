@@ -1,4 +1,4 @@
-define ["d3","jquery","lodash", "topojson", "map", "lists"], (d3,$,_,topojson,map,lists) -> 
+define ["d3","jquery","lodash", "topojson", "map", "lists", "controls"], (d3,$,_,topojson,map,lists,controls) -> 
 	
 	countryData = null
 	countryDataByName = null
@@ -7,14 +7,14 @@ define ["d3","jquery","lodash", "topojson", "map", "lists"], (d3,$,_,topojson,ma
 	codeLookup = {"code":{}, "country" :{},"alpha2":{}}
 	initMain = () ->
 		map.init('.map',loadCountryCodes)
-		
+		controls.init('.controls')
 		lists.init()
-	countriesCSVLoaded = (err, data) ->
+	countriesCSVLoaded = (err, countryStats) ->
 		numericCols = [
 			"fObese","fOver", "mObese", "mOver",
 		]
 		filteredData = []
-		for datum in data
+		for datum in countryStats
 			include = true
 			if datum['country'] is 'Ireland (Northern)'
 				#unfortunately having Ireland and Northern Ireland is a bit problematic
@@ -34,12 +34,12 @@ define ["d3","jquery","lodash", "topojson", "map", "lists"], (d3,$,_,topojson,ma
 		numericCols.push 'fTotal'
 		numericCols.push 'mTotal'
 
-		data = filteredData
+		countryStats = filteredData
 		avgs = ['Total','Obese','Over']
 		for avg in avgs
 			numericCols.push 'avg' + avg
 			numericCols.push 'diff' + avg
-			for country in data
+			for country in countryStats
 				countryAvg = (country['f' + avg] + country['m' + avg]) / 2
 				countryDiff = country['f' + avg] - country['m' + avg]
 				country['avg' + avg] = countryAvg
@@ -50,7 +50,7 @@ define ["d3","jquery","lodash", "topojson", "map", "lists"], (d3,$,_,topojson,ma
 				min: Number.MAX_VALUE
 				max: 0
 			}
-			for datum in data
+			for datum in countryStats
 				dVal = datum[col]
 				if dVal > range['max']
 					range['max'] = dVal
@@ -58,7 +58,7 @@ define ["d3","jquery","lodash", "topojson", "map", "lists"], (d3,$,_,topojson,ma
 					range['min'] = dVal
 			ranges[col] = range
 		
-		countryData = data
+		countryData = countryStats
 		countryDataByName = {}
 		for country in countryData
 			countryDataByName[country.country] = country
@@ -66,11 +66,11 @@ define ["d3","jquery","lodash", "topojson", "map", "lists"], (d3,$,_,topojson,ma
 		#displayTable()
 
 		stat = 'Total'
-		allData = map.assignCountryData(data, codeLookup)
+		countryFeatureData = map.assignCountryData(countryStats, codeLookup)
 		map.countryCircles(ranges,'Total')
-		lists.assignData(allData)
+		lists.assignData(countryFeatureData)
 		lists.showLists(stat)
-
+		controls.setControlData()
 	displayTable = () ->
 		data = countryData
 
