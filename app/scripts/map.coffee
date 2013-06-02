@@ -1,4 +1,9 @@
-define ["d3"], (d3) ->
+define ["d3",'mapTooltip'], (d3,mapTooltip) ->
+    d3.selection.prototype.moveToFront = () ->
+      return this.each(() ->
+        this.parentNode.appendChild(this);
+      );
+    
     console.log(d3)
     console.log('what')
     mapScale = 0.666
@@ -22,10 +27,13 @@ define ["d3"], (d3) ->
         "Korea" : "South Korea"
     }
     init = (selector,loadedCallback) ->
+        console.log(mapTooltip)
+        mapTooltip.init()
         console.log loadedCallback
         console.log selector
         console.log d3
-        svg = d3.select(selector).append('svg').attr('width',width).attr('height',height)
+        svg = d3.select(selector).style('height',height+'px')
+            .append('svg').attr('width',width).attr('height',height)
         g = svg.append('g')
         projection = d3.geo.mercator()
             .scale(80).translate([width / 2, height / 1.5]);
@@ -67,9 +75,7 @@ define ["d3"], (d3) ->
                 codedGeomData.Lat = lookup.Lat
                 codedGeomData.Long = lookup.Long
                 countryCircleData.push codedGeomData
-            
-
-            #console.log code
+        return countryCircleData
     countryCircles = (ranges, statistic) ->
         for country in countryCircleData
             p = projection([country.Long, country.Lat])
@@ -97,7 +103,8 @@ define ["d3"], (d3) ->
             ).attr('cy', (d) ->
                 d.y = d.center[1]
             ).attr('class',(d) ->
-                return d.country.replace(/[\s\(\)]/g,"_")
+                d.country.replace(/[\s\(\)]/g,"_") + " id"+d.id
+
             ).style('fill', neutralColor.toString())
             .style('opacity',0.8)
         circles.transition().duration(1000).attr('r',(d) ->
@@ -111,10 +118,7 @@ define ["d3"], (d3) ->
             
 
         )
-        a = []
-        for d in countryCircleData
-            if d.country isnt "Ireland (Northern)"
-                a.push d
+        circles.on('mouseover', showTooltip).on('mouseout',hideTooltip)
         force = d3.layout.force().nodes(countryCircleData).links([]).size([width,height])
             .gravity(0)
             .charge((d) ->
@@ -134,4 +138,22 @@ define ["d3"], (d3) ->
         ).attr('cy', (d) ->
             return d.y
         )
-    return {init: init, assignCountryData: assignCountryData, countryCircles:countryCircles}
+    showTooltip = (d,i) ->
+        console.log('show')
+        that = d3.select('circle.id'+d.id)
+        console.log(that)
+        that.classed('hover',true)
+        that.moveToFront()
+        mapTooltip.showTooltip(d,i)
+    hideTooltip = (d,i) ->
+        console.log('hide');
+        that = d3.select('circle.id'+d.id)
+
+        that.classed('hover',false)
+    return {
+        init: init
+        assignCountryData: assignCountryData
+        countryCircles:countryCircles
+        showTooltip: showTooltip
+        hideTooltip:hideTooltip
+    }

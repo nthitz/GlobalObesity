@@ -1,4 +1,4 @@
-define ["d3","jquery","lodash", "topojson", "map"], (d3,$,_,topojson,map) -> 
+define ["d3","jquery","lodash", "topojson", "map", "lists"], (d3,$,_,topojson,map,lists) -> 
 	
 	countryData = null
 	countryDataByName = null
@@ -7,6 +7,8 @@ define ["d3","jquery","lodash", "topojson", "map"], (d3,$,_,topojson,map) ->
 	codeLookup = {"code":{}, "country" :{},"alpha2":{}}
 	initMain = () ->
 		map.init('.map',loadCountryCodes)
+		
+		lists.init()
 	countriesCSVLoaded = (err, data) ->
 		numericCols = [
 			"fObese","fOver", "mObese", "mOver",
@@ -62,8 +64,13 @@ define ["d3","jquery","lodash", "topojson", "map"], (d3,$,_,topojson,map) ->
 			countryDataByName[country.country] = country
 		console.log countryData
 		#displayTable()
-		map.assignCountryData(data, codeLookup)
+
+		stat = 'Total'
+		allData = map.assignCountryData(data, codeLookup)
 		map.countryCircles(ranges,'Total')
+		lists.assignData(allData)
+		lists.showLists(stat)
+
 	displayTable = () ->
 		data = countryData
 

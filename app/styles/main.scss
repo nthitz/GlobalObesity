@@ -1,6 +1,49 @@
-body {
+@mixin box-sizing {
+  -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
 
+}
+
+@mixin webkitScroll {
+  &::-webkit-scrollbar {
+    width:8px;
+    height:10px;
+  }
+
+  &::-webkit-scrollbar-track:enabled {
+    background-color:transparent;
+  }
+
+  &::-webkit-scrollbar-track-piece {
+    background-color:transparent;
+    border:none;
+    margin:8px 0;
+  }
+
+  &::-webkit-scrollbar-thumb:vertical {
+    height:30px;
+    background-color:rgba(0,0,0,0.5);
+    -webkit-border-radius:5px;
+    -webkit-box-shadow:0 1px 1px rgba(255,255,255,0.2);
+  }
+
+  &::-webkit-scrollbar-thumb:horizontal {
+    width:30px;
+    background-color:rgba(0,0,0,0.5);
+    -webkit-border-radius:5px;
+  }
+
+  &::-webkit-scrollbar-button:start:decrement,::-webkit-scrollbar-button:end:increment {
+    display:block;
+    width:5px;
+    height:5px;
+    background-color:transparent;
+  }
+}
+html,body {
+    margin:0;
+    padding:0;
     background-color: white;
+    height: 100%;
 }
 
 .hero-unit {
@@ -20,3 +63,44 @@ body {
   opacity: 0.4;
 }
 
+.map {
+  float: left;
+}
+.list {
+  @include box-sizing;
+  @include webkitScroll;
+  width: 309px;
+  height: 333px;
+  float: left;
+  overflow-y:scroll;
+  margin-right: 10px;
+  ol {
+    margin:0;
+    padding-left: 30px;
+    li {
+      margin:0;
+    }
+  }
+}
+circle {
+  &.hover {
+    stroke:black;
+  }
+}
+@media screen and (-webkit-min-device-pixel-ratio:0) and (min-width: 1024px) {
+  html {
+    overflow-y:auto;
+    background-color:transparent;
+  }
+
+  body {
+    position:absolute;
+    top:0;
+    left:0;
+    bottom:0;
+    right:0px;
+
+    overflow-y:scroll;
+    overflow-x:hidden;
+  }
+}
