@@ -4,7 +4,7 @@ define ["d3","jquery","lodash", "topojson", "map"], (d3,$,_,topojson,map) ->
 	countryDataByName = null
 	ranges = {}
 	countryCodes = null
-	codeLookup = {"code":{}, "country" :{}}
+	codeLookup = {"code":{}, "country" :{},"alpha2":{}}
 	initMain = () ->
 		map.init('.map',loadCountryCodes)
 	countriesCSVLoaded = (err, data) ->
@@ -14,6 +14,9 @@ define ["d3","jquery","lodash", "topojson", "map"], (d3,$,_,topojson,map) ->
 		filteredData = []
 		for datum in data
 			include = true
+			if datum['country'] is 'Ireland (Northern)'
+				#unfortunately having Ireland and Northern Ireland is a bit problematic
+				include = false
 			for key in numericCols
 				strVal = datum[key]
 				numericVal = + strVal
@@ -21,21 +24,25 @@ define ["d3","jquery","lodash", "topojson", "map"], (d3,$,_,topojson,map) ->
 					include = false
 				datum[key] = numericVal
 				datum[key + "Str"] = strVal
+
 			datum['fTotal'] = datum['fObese'] + datum['fOver']
 			datum['mTotal'] = datum['mObese'] + datum['mOver']
 			if include
 				filteredData.push(datum)
+		numericCols.push 'fTotal'
+		numericCols.push 'mTotal'
+
 		data = filteredData
 		avgs = ['Total','Obese','Over']
-		for country in data
-			for avg in avgs
+		for avg in avgs
+			numericCols.push 'avg' + avg
+			numericCols.push 'diff' + avg
+			for country in data
 				countryAvg = (country['f' + avg] + country['m' + avg]) / 2
+				countryDiff = country['f' + avg] - country['m' + avg]
 				country['avg' + avg] = countryAvg
-		numericCols.push('fTotal')
-		numericCols.push 'mTotal'
-		numericCols.push 'avgTotal'
-		numericCols.push 'avgObese'
-		numericCols.push 'avgOver'
+				country['diff' + avg] = countryDiff
+
 		for col in numericCols
 			range = {
 				min: Number.MAX_VALUE
@@ -74,12 +81,20 @@ define ["d3","jquery","lodash", "topojson", "map"], (d3,$,_,topojson,map) ->
 		d3.select('.container table').insert('tr',':first-child').selectAll('td').data(keys)
 			.enter().append('td').text(String)
 	loadCountryCodes = () ->
-		d3.csv "data/countryNumericCodes.csv", numericCodesLoaded
+		d3.tsv "data/countryNumericCodes.tsv", numericCodesLoaded
 	numericCodesLoaded = (err, codes) ->
 		countryCodes = codes
 		for code in codes
 			codeLookup['code'][code['country-code']] = code
 			codeLookup['country'][code['name']] = code
+			codeLookup['alpha2'][code['alpha-2']] = code
+		d3.csv 'data/countryCenters.csv', countryCentersLoaded
+	countryCentersLoaded = (err, centers) ->
+		for center in centers
+			alpha2 = center['alpha2']
+			if typeof codeLookup['alpha2'][alpha2] isnt 'undefined'
+				codeLookup['alpha2'][alpha2]['Lat'] = +center['latitude']
+				codeLookup['alpha2'][alpha2]['Long'] = +center['longitude']
 
 		d3.tsv 'data/countries.tsv', countriesCSVLoaded
 	initMain()
