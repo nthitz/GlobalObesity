@@ -50,10 +50,8 @@ define ["map"] , (map) ->
 		)
 		lis.on('mouseover',liHover).on('mouseout',liStopHover)
 	liHover = (d,i) ->
-		console.log('li hover')
 		map.showTooltip(d,i)
 	liStopHover = (d,i) ->
-		console.log('stop hover')
 		map.hideTooltip(d,i)
 
 	return {init: init, assignData:assignData, showLists: showLists}
