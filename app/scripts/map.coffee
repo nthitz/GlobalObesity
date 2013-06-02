@@ -42,9 +42,9 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 			.scale(250)
 			.translate([width / 2, height / 1.5])
 			.clipAngle(90);
-		console.log projectionOrthogrpahic
+		#console.log projectionOrthogrpahic
 		path = d3.geo.path().projection(projectionFull)
-		console.log topojson
+		#console.log topojson
 		d3.select(selector).append('input').attr('type','button').on('click',->
 			console.log svg.selectAll('.country')
 			svg.selectAll(".country").transition()
@@ -86,7 +86,7 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 					codedGeomData = geomData
 					break
 			if codedGeomData is null
-				console.log countryName + " " + code
+				#console.log countryName + " " + code
 			else
 				_.extend(codedGeomData, country)
 				codedGeomData.Lat = lookup.Lat
