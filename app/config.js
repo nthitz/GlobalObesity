@@ -1,9 +1,15 @@
 requirejs.config({
-    baseUrl: './',
+    baseUrl: './scripts/',
+    shim: {
+        d3: {
+            exports: 'd3'
+        }
+    },
     paths: {
-        d3: 'app/bower_components/d3/d3',
-        jquery: 'app/bower_components/jquery/jquery',
-        modernizr: 'app/bower_components/modernizr',
-        topojson: 'app/bower_components/topojson/topojson'
+        jquery: '../bower_components/jquery/jquery',
+        modernizr: '../bower_components/modernizr',
+        topojson: '../bower_components/topojson/topojson',
+        d3: '../bower_components/d3/d3',
+        lodash: '../bower_components/lodash/lodash'
     }
 });

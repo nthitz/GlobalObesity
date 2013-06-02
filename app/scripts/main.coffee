@@ -1,7 +1,12 @@
-define ["map"], (map) -> 
-	console.log 'hey'
-	console.log(map)
+define ["d3","jquery","lodash", "topojson", "map"], (d3,$,_,topojson,map) -> 
+	
 	countryData = null
+	countryDataByName = null
+	ranges = {}
+	countryCodes = null
+	codeLookup = {"code":{}, "country" :{}}
+	initMain = () ->
+		map.init('.map',loadCountryCodes)
 	countriesCSVLoaded = (err, data) ->
 		numericCols = [
 			"fObese","fOver", "mObese", "mOver",
@@ -21,11 +26,37 @@ define ["map"], (map) ->
 			if include
 				filteredData.push(datum)
 		data = filteredData
+		avgs = ['Total','Obese','Over']
+		for country in data
+			for avg in avgs
+				countryAvg = (country['f' + avg] + country['m' + avg]) / 2
+				country['avg' + avg] = countryAvg
+		numericCols.push('fTotal')
+		numericCols.push 'mTotal'
+		numericCols.push 'avgTotal'
+		numericCols.push 'avgObese'
+		numericCols.push 'avgOver'
+		for col in numericCols
+			range = {
+				min: Number.MAX_VALUE
+				max: 0
+			}
+			for datum in data
+				dVal = datum[col]
+				if dVal > range['max']
+					range['max'] = dVal
+				if dVal < range['min']
+					range['min'] = dVal
+			ranges[col] = range
 		
-		console.log data
 		countryData = data
+		countryDataByName = {}
+		for country in countryData
+			countryDataByName[country.country] = country
+		console.log countryData
 		#displayTable()
-
+		map.assignCountryData(data, codeLookup)
+		map.countryCircles(ranges,'Total')
 	displayTable = () ->
 		data = countryData
 
@@ -42,4 +73,13 @@ define ["map"], (map) ->
 		).enter().append('td').text(String)
 		d3.select('.container table').insert('tr',':first-child').selectAll('td').data(keys)
 			.enter().append('td').text(String)
-	d3.tsv 'data/countries.tsv', countriesCSVLoaded
+	loadCountryCodes = () ->
+		d3.csv "data/countryNumericCodes.csv", numericCodesLoaded
+	numericCodesLoaded = (err, codes) ->
+		countryCodes = codes
+		for code in codes
+			codeLookup['code'][code['country-code']] = code
+			codeLookup['country'][code['name']] = code
+
+		d3.tsv 'data/countries.tsv', countriesCSVLoaded
+	initMain()
