@@ -142,7 +142,7 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 			.charge((d) ->
 				return -d.r 
 			).on('tick', forceTick)
-		#force.start()
+		force.start()
 		countryPaths.attr('class',(d) ->
 			return 'country ' + d.country
 		)
