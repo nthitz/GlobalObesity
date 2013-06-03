@@ -27,6 +27,13 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 		"England"  : "United Kingdom"
 		"Korea" : "South Korea"
 	}
+	projections = {
+		"all": d3.geo.mercator().scale(80).translate([width / 2, height / 1.5]);
+		"africa": d3.geo.orthographic()
+			.scale(250)
+			.translate([width / 2, height / 1.5])
+			.clipAngle(90);
+	}
 	init = (selector,loadedCallback) ->
 		console.log(mapTooltip)
 		d3.select(selector).append('div').attr('class','mapTooltip')
@@ -37,12 +44,8 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 		svg = d3.select(selector).style('height',height+'px')
 			.append('svg').attr('width',width).attr('height',height)
 		g = svg.append('g')
-		projectionFull = d3.geo.mercator()
-			.scale(80).translate([width / 2, height / 1.5]);
-		projectionOrthogrpahic = d3.geo.orthographic()
-			.scale(250)
-			.translate([width / 2, height / 1.5])
-			.clipAngle(90);
+		projectionFull = projections.all
+		
 		#console.log projectionOrthogrpahic
 		path = d3.geo.path().projection(projectionFull)
 		#console.log topojson
@@ -53,7 +56,7 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 				#.attr('d',d3.geo.path().projection(projectionOrthogrpahic))
 				.attrTween("d", (d) ->
 
-					t = projectionTween(projectionFull, projectionOrthogrpahic)(d)
+					t = projectionTween(projectionFull, projections.africa)(d)
 					return t
 				);
 		)
@@ -121,12 +124,11 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 				d.x = d.center[0]
 			).attr('cy', (d) ->
 				d.y = d.center[1]
-			).attr('class',(d) ->
-				d.country.replace(/[\s\(\)]/g,"_") + " id"+d.id
-
 			).style('fill', neutralColor.toString())
-			
-		circles.transition().duration(1000).attr('r',(d) ->
+
+		circles.transition().duration(1000).attr('class',(d) ->
+			d.country.replace(/[\s\(\)]/g,"_") + " id"+d.id
+		).attr('r',(d) ->
 			d.r = circleScale(d['avg' + statistic])
 		).style('fill',(d) ->
 			value = d['diff' + statistic]
