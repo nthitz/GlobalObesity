@@ -28,12 +28,10 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 		"Korea" : "South Korea"
 	}
 	projections = {
-		"all": d3.geo.mercator().scale(80).translate([width / 2, height / 1.5]);
-		"africa": d3.geo.orthographic()
-			.scale(250)
-			.translate([width / 2, height / 1.5])
-			.clipAngle(90);
+		"all": {p: d3.geo.mercator().scale(80).translate([width / 2, height / 1.5]), angle: 180}
+		"africa": {p: d3.geo.orthographic().scale(250).translate([width / 2, height / 1.5]).rotate([-10,10]).clipAngle(90), angle: 90}
 	}
+	curProjection = null
 	init = (selector,loadedCallback) ->
 		console.log(mapTooltip)
 		d3.select(selector).append('div').attr('class','mapTooltip')
@@ -47,8 +45,10 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 		projectionFull = projections.all
 		
 		#console.log projectionOrthogrpahic
-		path = d3.geo.path().projection(projectionFull)
+		path = d3.geo.path().projection(projectionFull.p)
 		#console.log topojson
+		curProjection = projections.all
+		###
 		d3.select(selector).append('input').attr('type','button').on('click',->
 			console.log svg.selectAll('.country')
 			svg.selectAll(".country").transition()
@@ -56,10 +56,11 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 				#.attr('d',d3.geo.path().projection(projectionOrthogrpahic))
 				.attrTween("d", (d) ->
 
-					t = projectionTween(projectionFull, projections.africa)(d)
+					t = projectionTween(projectionFull, projections.africa,90)(d)
 					return t
 				);
 		)
+		###
 		d3.json("data/data.json", (error, world) ->
 
 			inited = true
@@ -98,10 +99,23 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 				countryCircleData.push codedGeomData
 		return countryCircleData
 	countryCircles = (ranges, statistic,region) ->
+		countryPaths.transition().duration(1000)
+			.attrTween("d",projectionTween(curProjection.p, projections[region].p, curProjection.angle, projections[region].angle))
+		curProjection = projections[region]
 		mapTooltip.setStat(statistic)
+		console.log 'country circles ' + region
 		for country in countryCircleData
-			p = projectionFull([country.Long, country.Lat])
+			p = curProjection.p([country.Long, country.Lat])
 			country.center = p
+			
+			if region is 'all'
+				country.visible = true
+			else if region is country.region
+				console.log 'visible ' + region
+				country.visible = true
+			else
+				console.log 'hide ' + region + " " + country.region
+				country.visible = false
 		console.log "num circles " +countryCircleData.length
 		min = ranges['avg' + statistic]['min']
 		max = ranges['avg' + statistic]['max']
@@ -139,18 +153,22 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 			
 
 		).style('opacity',(d) ->
-			if region is 'all'
-				return 0.8
-			else if region is d.region
+			if d.visible
 				return 0.8
 			else
 				return 0
 		)
+
 		circles.on('mouseover', showTooltip).on('mouseout',hideTooltip)
+		
 		force = d3.layout.force().nodes(countryCircleData).links([]).size([width,height])
 			.gravity(0)
 			.charge((d) ->
-				return -d.r 
+				return -d.r
+				if d.visible
+					return -d.r
+				else
+					return 0.001
 			).on('tick', forceTick)
 		force.start()
 		countryPaths.attr('class',(d) ->
@@ -169,7 +187,7 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 	showTooltip = (d,i) ->
 		that = d3.select('circle.id'+d.id)
 		that.classed('hover',true)
-		that.moveToFront()
+		#that.moveToFront()
 		mapTooltip.showTooltip(d,i)
 	hideTooltip = (d,i) ->
 		that = d3.select('circle.id'+d.id)
@@ -177,7 +195,7 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 		that.classed('hover',false)
 
 
-	projectionTween = (projection0, projection1) ->
+	projectionTween = (projection0, projection1,clipAngle0, clipAngle1) ->
 		return (d) ->
 			t = 0;
 			
@@ -193,11 +211,14 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 
 			path = d3.geo.path()
 				.projection(projection);
-
-
+			
 			(_) ->
 				t = _;
-				projection.clipAngle(180 - 90 * t)
+				angle = clipAngle0 * (1-t) + clipAngle1 * t
+				projection.clipAngle(angle)
+				p = path(d)
+				if typeof p is 'undefined'
+					return 'M0,0 z'
 				return path(d);
 		
 	  
