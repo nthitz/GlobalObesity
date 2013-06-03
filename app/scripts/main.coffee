@@ -12,7 +12,8 @@ define ["d3","jquery","lodash", "topojson", "map", "lists", "controls"], (d3,$,_
 		lists.init()
 	redo = () ->
 		stat = controls.getCurrentStat()
-		map.countryCircles(ranges,stat)
+		region = controls.getCurrentRegion()
+		map.countryCircles(ranges,stat,region)
 		lists.showLists(stat)
 	countriesCSVLoaded = (err, countryStats) ->
 		numericCols = [
@@ -72,7 +73,7 @@ define ["d3","jquery","lodash", "topojson", "map", "lists", "controls"], (d3,$,_
 
 		stat = 'Total'
 		countryFeatureData = map.assignCountryData(countryStats, codeLookup)
-		map.countryCircles(ranges,'Total')
+		map.countryCircles(ranges,'Total',"all")
 		lists.assignData(countryFeatureData)
 		lists.showLists(stat)
 	displayTable = () ->

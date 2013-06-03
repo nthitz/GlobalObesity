@@ -29,7 +29,8 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 	}
 	init = (selector,loadedCallback) ->
 		console.log(mapTooltip)
-		mapTooltip.init()
+		d3.select(selector).append('div').attr('class','mapTooltip')
+		mapTooltip.init('.mapTooltip')
 		console.log loadedCallback
 		console.log selector
 		console.log d3
@@ -93,8 +94,8 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 				codedGeomData.Long = lookup.Long
 				countryCircleData.push codedGeomData
 		return countryCircleData
-	countryCircles = (ranges, statistic) ->
-		
+	countryCircles = (ranges, statistic,region) ->
+		mapTooltip.setStat(statistic)
 		for country in countryCircleData
 			p = projectionFull([country.Long, country.Lat])
 			country.center = p
@@ -124,7 +125,7 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 				d.country.replace(/[\s\(\)]/g,"_") + " id"+d.id
 
 			).style('fill', neutralColor.toString())
-			.style('opacity',0.8)
+			
 		circles.transition().duration(1000).attr('r',(d) ->
 			d.r = circleScale(d['avg' + statistic])
 		).style('fill',(d) ->
@@ -135,6 +136,13 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 				return femaleColorScale(femaleColorNormalize(value))
 			
 
+		).style('opacity',(d) ->
+			if region is 'all'
+				return 0.8
+			else if region is d.region
+				return 0.8
+			else
+				return 0
 		)
 		circles.on('mouseover', showTooltip).on('mouseout',hideTooltip)
 		force = d3.layout.force().nodes(countryCircleData).links([]).size([width,height])
