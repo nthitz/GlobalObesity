@@ -15,7 +15,9 @@ define [], ->
 	regionOptions = null
 	currentStat = 'Total'
 	currentRegion = 'all'
-	init = (selector) ->
+	redoCallback = null
+	init = (selector,_redoCallback) ->
+		redoCallback = _redoCallback
 		regionList = d3.select(selector).append('ul').attr('class','region')
 		regionOptions = []
 		regionOptions.push({
@@ -64,9 +66,14 @@ define [], ->
 			return d.active
 		)
 		console.log(currentStat + " " + currentRegion)
-
+		redoCallback()
+	getCurrentStat = () ->
+		return currentStat
+	getCurrentRegion = () ->
+		return currentRegion
 	return {
 		init: init
-		setControlData: () ->
+		getCurrentRegion : getCurrentRegion
+		getCurrentStat : getCurrentStat
 
 	}

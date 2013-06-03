@@ -108,6 +108,7 @@ circle {
       cursor: pointer;
       &.active {
         background-color: green;
+        color: white;
       }
     }
     li + li {

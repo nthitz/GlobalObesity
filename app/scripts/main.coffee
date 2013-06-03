@@ -7,8 +7,13 @@ define ["d3","jquery","lodash", "topojson", "map", "lists", "controls"], (d3,$,_
 	codeLookup = {"code":{}, "country" :{},"alpha2":{}}
 	initMain = () ->
 		map.init('.map',loadCountryCodes)
-		controls.init('.controls')
+		controls.init('.controls',redo)
+		console.log this
 		lists.init()
+	redo = () ->
+		stat = controls.getCurrentStat()
+		map.countryCircles(ranges,stat)
+		lists.showLists(stat)
 	countriesCSVLoaded = (err, countryStats) ->
 		numericCols = [
 			"fObese","fOver", "mObese", "mOver",
@@ -70,7 +75,6 @@ define ["d3","jquery","lodash", "topojson", "map", "lists", "controls"], (d3,$,_
 		map.countryCircles(ranges,'Total')
 		lists.assignData(countryFeatureData)
 		lists.showLists(stat)
-		controls.setControlData()
 	displayTable = () ->
 		data = countryData
 
