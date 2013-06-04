@@ -19,6 +19,9 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 	countryPaths = null
 	countryCircleData = []
 	circles = null
+	projectionName = "mercator"
+	curRotation = null
+	dotForce = null
 	countryLookups = {
 		"Trinidad & Tobago" : "Trinidad and Tobago"
 		"USA": "United States"
@@ -27,14 +30,18 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 		"England"  : "United Kingdom"
 		"Korea" : "South Korea"
 	}
+	projectionLookup = {
+		"mercator": d3.geo.mercator().scale(70).translate([width/2, height/2])
+		"orthographic": d3.geo.orthographic().scale(250).translate([width/2, height/2]).clipAngle(90)
+	}
 	projections = {
-		"all": {p: d3.geo.mercator().scale(80).translate([width / 2, height / 2]).rotate([0,0]).center([0,0]), angle: 180}
-		"america": {p: d3.geo.orthographic().scale(250).translate([width / 2, height / 2]).rotate([100,-10]).center([0,0]).clipAngle(90), angle: 90}
-		"africa": {p: d3.geo.orthographic().scale(250).translate([width / 2, height / 2]).rotate([-0,0]).center([0,0]).clipAngle(90), angle: 90}
-		"emed": {p: d3.geo.orthographic().scale(250).translate([width / 2, height / 2]).rotate([-13,85]).clipAngle(90), angle: 90}
-		"europe": {p: d3.geo.orthographic().scale(250).translate([width / 2, height / 2]).rotate([-10,10]).clipAngle(90), angle: 90}
-		"seasia": {p: d3.geo.orthographic().scale(250).translate([width / 2, height / 2]).rotate([-10,10]).clipAngle(90), angle: 90}
-		"wpacific": {p: d3.geo.orthographic().scale(250).translate([width / 2, height / 2]).rotate([-10,10]).clipAngle(90), angle: 90}
+		"all": {name: "mercator"}
+		"america": {name: "orthographic", angle: 90, rotate:[100,-10]}
+		"africa": {name: "orthographic", angle: 90, rotate:[-10,0]}
+		"emed": {name: "orthographic", angle: 90}
+		"europe": {name: "orthographic", angle: 90}
+		"seasia": {name: "orthographic", angle: 90}
+		"wpacific": {name: "orthographic", angle: 90}
 		
 	}
 	curProjection = null
@@ -49,7 +56,8 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 			.append('svg').attr('width',width).attr('height',height)
 		g = svg.append('g')
 		curProjection = projections.all
-		path = d3.geo.path().projection(curProjection.p)
+		console.log projectionLookup.mercator
+		path = d3.geo.path().projection(projectionLookup.mercator)
 		###
 		d3.select(selector).append('input').attr('type','button').on('click',->
 			console.log svg.selectAll('.country')
@@ -76,7 +84,7 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 				.attr("d", path)
 			if loadedCallback isnt null
 				console.log 'no callback'
-				#loadedCallback()
+				loadedCallback()
 		);
 	assignCountryData = (data, codeLookup) ->
 		countryCircleData = []
@@ -108,21 +116,44 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 		console.log region
 		region = region.id
 		statistic = statistic.id
+		newProjection = projections[region]
+		curRotation = [0,0]
+		if newProjection.name isnt projectionName
+			if newProjection.name is 'orthographic'
+				console.log 'rotating to '
+				console.log newProjection.rotate
+				curRotation = newProjection.rotate
+				transitionToOrthographic(newProjection.rotate)
+			else if newProjection.name is 'mercator'
+				transitionToMercator()
+		else
+			#same projection type
+			if newProjection.name is 'orthographic'
+				transitionRotation(newProjection.rotate)
+		###
 		countryPathTween = 0
 		if curProjection isnt projections[region]
 			countryPathTween = 1000
 		console.log region
 		console.log projections[region]
+
 		countryPaths.transition().duration(countryPathTween)
 			.attrTween("d",projectionTween(curProjection.p, projections[region].p, curProjection.angle, projections[region].angle))
 		curProjection = projections[region]
-		
-		return
+		###
 		
 		mapTooltip.setStat(statistic)
+		
+		dotProjection = null
+		if newProjection.name is 'mercator'
+			dotProjection = projectionLookup[newProjection.name]
+		else if newProjection.name is 'orthographic'
+			dotProjection = d3.geo.orthographic().scale(250).translate([width/2, height/2]).clipAngle(90).rotate(newProjection.rotate)
 		console.log 'country circles ' + region
 		for country in countryCircleData
-			p = curProjection.p([country.Long, country.Lat])
+			p = null
+
+			p = dotProjection([country.Long, country.Lat])
 			country.center = p
 			
 			if region is 'all'
@@ -132,6 +163,7 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 			else
 				country.visible = false
 		console.log "num circles " +countryCircleData.length
+		console.log ranges
 		min = ranges['avg' + statistic]['min']
 		max = ranges['avg' + statistic]['max']
 		diffMin = ranges['diff' + statistic]['min']
@@ -176,7 +208,7 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 
 		circles.on('mouseover', showTooltip).on('mouseout',hideTooltip)
 		
-		force = d3.layout.force().nodes(countryCircleData).links([]).size([width,height])
+		dotForce = d3.layout.force().nodes(countryCircleData).links([]).size([width,height])
 			.gravity(0)
 			.charge((d) ->
 				return -d.r
@@ -185,7 +217,7 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 				else
 					return 0.001
 			).on('tick', forceTick)
-		force.start()
+		dotForce.start()
 		countryPaths.attr('class',(d) ->
 			return 'country ' + d.country
 		)
@@ -209,8 +241,47 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 		that = d3.select('circle.id'+d.id)
 
 		that.classed('hover',false)
+	transitionRotation = (rotation) ->
+		countryPaths.transition().duration(400).delay(10)
+			.attrTween("d",rotationTween( curRotation, rotation))
+		setTimeout(() ->
+			dotForce.start()
+		,400)
+	transitionToOrthographic = (finalRotation) ->
+		transToOrthDur = 500
+		countryPaths.transition().duration(transToOrthDur)
+			.attrTween("d",projectionTween(projectionLookup.mercator, projectionLookup.orthographic, 180, 90))
+		projectionName = "orthographic"
+		
+		setTimeout(() ->
+			dotForce.start()
+			countryPaths.transition().duration(400).delay(10)
+				.attrTween("d",rotationTween([0,0], finalRotation))
+		,transToOrthDur + 50)
+	transitionToMercator = () ->
+		console.log projectionLookup.mercator
+		backToAfricaDur = 500
+		countryPaths.transition().duration(backToAfricaDur)
+			.attrTween("d",rotationTween(curRotation, [0,0]))
 
-
+		setTimeout(() ->
+			dotForce.start()
+			countryPaths.transition().duration(400)
+				.attrTween("d",projectionTween(projectionLookup.orthographic, projectionLookup.mercator, 90, 180))
+		, backToAfricaDur + 50)
+		projectionName = "mercator"
+	rotationTween = (r0, r1) ->
+		return (d) ->
+			r = d3.interpolate(r0,r1);
+			t = 0
+			projection = projectionLookup.orthographic
+			p = d3.geo.path().projection(projection)
+			(_) ->
+				t = _
+				projection.rotate(r(t))
+				if typeof p is 'undefined'
+					return 'M0,0 z'
+				return p(d)
 	projectionTween = (projection0, projection1,clipAngle0, clipAngle1) ->
 		return (d) ->
 			t = 0;
@@ -230,23 +301,18 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 			path = d3.geo.path()
 				.projection(projection);
 			###
-			ortho = null
-			if clipAngle1 is 90 and clipAngle0 is 90
-				ortho = d3.geo.orthographic().scale(250).translate([width/2,height/2])
-			else
-				ortho = projection
 			path2 = d3.geo.path()
-				.projection(ortho)
+				.projection(projection)
 			(_) ->
 				t = _;
 				angle = clipAngle0 * (1-t) + clipAngle1 * t
-				ortho.clipAngle(angle)
+				projection.clipAngle(angle)
 
 				#rotationX = rotation0[0] * (1-t) + rotation1[0] * t
 				#rotationY = rotation0[1] * (1-t) + rotation1[1] * t
 				#projection.rotate([rotationX, rotationY])
-				if clipAngle0 is clipAngle1
-					ortho.rotate(r(t))
+				#if clipAngle0 is clipAngle1
+				#ortho.rotate(r(t))
 				#projection.center(center(t))
 				#projection.rotate(projection1.rotate())
 

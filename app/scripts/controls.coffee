@@ -48,7 +48,7 @@ define [], ->
 				return i
 			)
 		currentStat = stats[0]
-		currentRegion = regionOptions[1]
+		currentRegion = regionOptions[0]
 
 		d3.selectAll('ul').selectAll('li').on('click', clickOption)
 	clickOption = (d,i) ->
