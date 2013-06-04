@@ -19,7 +19,7 @@ define ["map"] , (map) ->
 	assignData = (data) ->
 		countryData = data
 	showLists = (statistic) ->
-
+		return
 		for list in listData
 			list.data = []
 			for datum in countryData
