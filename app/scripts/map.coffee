@@ -111,10 +111,8 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 			if region is 'all'
 				country.visible = true
 			else if region is country.region
-				console.log 'visible ' + region
 				country.visible = true
 			else
-				console.log 'hide ' + region + " " + country.region
 				country.visible = false
 		console.log "num circles " +countryCircleData.length
 		min = ranges['avg' + statistic]['min']
