@@ -13,6 +13,8 @@ define ["d3","jquery","lodash", "topojson", "map", "lists", "controls"], (d3,$,_
 	redo = () ->
 		stat = controls.getCurrentStat()
 		region = controls.getCurrentRegion()
+		console.log stat
+		console.log region
 		map.countryCircles(ranges,stat,region)
 		lists.showLists(stat)
 	countriesCSVLoaded = (err, countryStats) ->
@@ -73,9 +75,13 @@ define ["d3","jquery","lodash", "topojson", "map", "lists", "controls"], (d3,$,_
 
 		stat = 'Total'
 		countryFeatureData = map.assignCountryData(countryStats, codeLookup)
-		map.countryCircles(ranges,'Total',"all")
+		initStat = controls.getCurrentStat()
+		initRegion = controls.getCurrentRegion()
+		console.log initStat
+		console.log initRegion
+		map.countryCircles(ranges,initStat,initRegion)
 		lists.assignData(countryFeatureData)
-		lists.showLists(stat)
+		lists.showLists(initStat)
 	displayTable = () ->
 		data = countryData
 

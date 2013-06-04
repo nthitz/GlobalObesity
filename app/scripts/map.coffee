@@ -28,8 +28,14 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 		"Korea" : "South Korea"
 	}
 	projections = {
-		"all": {p: d3.geo.mercator().scale(80).translate([width / 2, height / 1.5]), angle: 180}
-		"africa": {p: d3.geo.orthographic().scale(250).translate([width / 2, height / 1.5]).rotate([-10,10]).clipAngle(90), angle: 90}
+		"all": {p: d3.geo.mercator().scale(80).translate([width / 2, height / 1.5]).rotate([]), angle: 180, r:[]}
+		"america": {p: d3.geo.orthographic().scale(250).translate([width / 2, height / 1.5]).rotate([80,0]).center([80,0]).clipAngle(90), angle: 90, r:[80,0]}
+		"africa": {p: d3.geo.orthographic().scale(250).translate([width / 2, height / 1.5]).rotate([-10,0]).clipAngle(90), angle: 90, r:[-10,10]}
+		"emed": {p: d3.geo.orthographic().scale(250).translate([width / 2, height / 1.5]).rotate([-13,85]).clipAngle(90), angle: 90}
+		"europe": {p: d3.geo.orthographic().scale(250).translate([width / 2, height / 1.5]).rotate([-10,10]).clipAngle(90), angle: 90}
+		"seasia": {p: d3.geo.orthographic().scale(250).translate([width / 2, height / 1.5]).rotate([-10,10]).clipAngle(90), angle: 90}
+		"wpacific": {p: d3.geo.orthographic().scale(250).translate([width / 2, height / 1.5]).rotate([-10,10]).clipAngle(90), angle: 90}
+		
 	}
 	curProjection = null
 	init = (selector,loadedCallback) ->
@@ -43,9 +49,8 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 			.append('svg').attr('width',width).attr('height',height)
 		g = svg.append('g')
 		projectionFull = projections.all
-		
+		path = d3.geo.path().projection(projections.america.p)
 		#console.log projectionOrthogrpahic
-		path = d3.geo.path().projection(projectionFull.p)
 		#console.log topojson
 		curProjection = projections.all
 		###
@@ -69,8 +74,11 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 			countryPaths = g.selectAll(".country").data( countryData )
 				.enter().insert("path", ".graticule")
 				.attr("class", "country")
-				.attr("d", path)
+
+
+			#	.attr("d", path)
 			if loadedCallback isnt null
+				console.log 'no callback'
 				loadedCallback()
 		);
 	assignCountryData = (data, codeLookup) ->
@@ -99,8 +107,17 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 				countryCircleData.push codedGeomData
 		return countryCircleData
 	countryCircles = (ranges, statistic,region) ->
-		countryPaths.transition().duration(1000)
-			.attrTween("d",projectionTween(curProjection.p, projections[region].p, curProjection.angle, projections[region].angle))
+		console.log 'circles '
+		console.log region
+		region = region.id
+		statistic = statistic.id
+		countryPathTween = 0
+		if curProjection isnt projections[region]
+			countryPathTween = 1000
+		console.log region
+		console.log projections[region]
+		countryPaths.transition().duration(countryPathTween)
+			.attrTween("d",projectionTween(curProjection.p, projections[region].p, curProjection.angle, projections[region].angle, curProjection.r, projections[region].r))
 		curProjection = projections[region]
 		mapTooltip.setStat(statistic)
 		console.log 'country circles ' + region
@@ -183,6 +200,7 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 			return d.y
 		)
 	showTooltip = (d,i) ->
+		return
 		that = d3.select('circle.id'+d.id)
 		that.classed('hover',true)
 		#that.moveToFront()
@@ -193,10 +211,11 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 		that.classed('hover',false)
 
 
-	projectionTween = (projection0, projection1,clipAngle0, clipAngle1) ->
+	projectionTween = (projection0, projection1,clipAngle0, clipAngle1, rotation0, rotation1) ->
 		return (d) ->
 			t = 0;
-			
+			r = d3.interpolate(projection0.rotate(), projection1.rotate());
+			center = d3.interpolate(projection0.center(),projection1.center())
 			project = (λ, φ) ->
 				λ *= 180 / Math.PI
 				φ *= 180 / Math.PI;
@@ -214,6 +233,13 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 				t = _;
 				angle = clipAngle0 * (1-t) + clipAngle1 * t
 				projection.clipAngle(angle)
+
+				rotationX = rotation0[0] * (1-t) + rotation1[0] * t
+				rotationY = rotation0[1] * (1-t) + rotation1[1] * t
+				#projection.rotate([rotationX, rotationY])
+				projection.rotate(r(t))
+				projection.center(center(t))
+				#projection.rotate([30,0])
 				p = path(d)
 				if typeof p is 'undefined'
 					return 'M0,0 z'

@@ -19,15 +19,16 @@ define ["map"] , (map) ->
 	assignData = (data) ->
 		countryData = data
 	showLists = (statistic) ->
+
 		for list in listData
 			list.data = []
 			for datum in countryData
 				newData = _.extend({}, datum)
-				newData.listVar = newData[list['var'] + statistic]
+				newData.listVar = newData[list['var'] + statistic.id]
 				list.data.push(newData)
 			list.data.sort((a,b) ->
-				aVal = a[list['var'] + statistic]
-				bVal = b[list['var'] + statistic]
+				aVal = a[list['var'] + statistic.id]
+				bVal = b[list['var'] + statistic.id]
 				if list['order'] is 'a'
 					return aVal - bVal
 				else if list['order'] is 'd'
@@ -36,7 +37,7 @@ define ["map"] , (map) ->
 			
 		titles.text((d) ->
 			title = d.title
-			title = title.replace('%stat%',statistic)
+			title = title.replace('%stat%',statistic.lbl)
 			return title
 		)
 		lis = uls.selectAll('li').data((d) ->

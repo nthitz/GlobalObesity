@@ -13,15 +13,15 @@ define [], ->
 		{id: "Over", lbl:"Over"}
 	]
 	regionOptions = null
-	currentStat = 'Total'
-	currentRegion = 'all'
+	currentStat =  null
+	currentRegion = null
 	redoCallback = null
 	init = (selector,_redoCallback) ->
 		redoCallback = _redoCallback
 		regionList = d3.select(selector).append('ul').attr('class','region')
 		regionOptions = []
 		regionOptions.push({
-			id: "all", lbl:"All", active: true
+			id: "all", lbl:"All", active:true
 		})
 		for region in regions
 			region.active = false;
@@ -31,6 +31,8 @@ define [], ->
 				return d.active
 			).text((d) ->
 				return d.lbl
+			).attr('data-index',(d,i) ->
+				return i
 			)
 		for stat in stats
 			if typeof stat.active is 'undefined'
@@ -42,7 +44,11 @@ define [], ->
 				return d.lbl
 			).classed('active',(d) ->
 				return d.active
+			).attr('data-index',(d,i) ->
+				return i
 			)
+		currentStat = stats[0]
+		currentRegion = regionOptions[0]
 
 		d3.selectAll('ul').selectAll('li').on('click', clickOption)
 	clickOption = (d,i) ->
@@ -55,10 +61,10 @@ define [], ->
 		data = null
 		if parentClass is 'region'
 			data = regionOptions
-			currentRegion = d.id
+			currentRegion = d
 		else if parentClass is 'stat'
 			data = stats
-			currentStat = d.id
+			currentStat = d
 		for datum in data
 			datum.active = false
 		d.active = true
