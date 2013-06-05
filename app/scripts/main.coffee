@@ -1,5 +1,5 @@
-define ["d3","jquery","lodash", "topojson", "map", "lists", "controls"], (d3,$,_,topojson,map,lists,controls) -> 
-	
+define ["d3","jquery","lodash", "topojson", "map", "lists", "controls"], (d3,$,_,topojson,map,lists,controls) ->
+
 	countryData = null
 	countryDataByName = null
 	ranges = {}
@@ -7,7 +7,8 @@ define ["d3","jquery","lodash", "topojson", "map", "lists", "controls"], (d3,$,_
 	codeLookup = {"code":{}, "country" :{},"alpha2":{}}
 	features = null
 	initMain = () ->
-		map.init('.map',loadCountryCodes)
+
+        map.init('.map',loadCountryCodes)
 		controls.init('.controls',redo)
 		console.log this
 		lists.init()
@@ -16,7 +17,7 @@ define ["d3","jquery","lodash", "topojson", "map", "lists", "controls"], (d3,$,_
 		region = controls.getCurrentRegion()
 		console.log stat
 		console.log region
-		
+
 		maxAvg = d3.max(features, (feature) ->
 			if region.id is 'all' or region.id is feature.region
 				return feature['avg' + stat.id]
@@ -93,7 +94,7 @@ define ["d3","jquery","lodash", "topojson", "map", "lists", "controls"], (d3,$,_
 				if dVal < range['min']
 					range['min'] = dVal
 			ranges[col] = range
-		
+
 		countryData = countryStats
 		countryDataByName = {}
 		for country in countryData
