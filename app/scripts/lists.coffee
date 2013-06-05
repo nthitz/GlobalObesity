@@ -18,14 +18,14 @@ define ["map"] , (map) ->
 		uls = lists.append('ol')
 	assignData = (data) ->
 		countryData = data
-	showLists = (statistic) ->
-		return
+	showLists = (statistic,region) ->
 		for list in listData
 			list.data = []
 			for datum in countryData
-				newData = _.extend({}, datum)
-				newData.listVar = newData[list['var'] + statistic.id]
-				list.data.push(newData)
+				if region.id is 'all' or region.id is datum.region
+					newData = _.extend({}, datum)
+					newData.listVar = newData[list['var'] + statistic.id]
+					list.data.push(newData)
 			list.data.sort((a,b) ->
 				aVal = a[list['var'] + statistic.id]
 				bVal = b[list['var'] + statistic.id]
@@ -44,6 +44,7 @@ define ["map"] , (map) ->
 			return d.data
 		)
 		lis.enter().append('li')
+		lis.exit().remove()
 		lis.text((d,i) ->
 
 			dispVar = Math.round(d.listVar * 100) / 100

@@ -38,10 +38,10 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 		"all": {name: "mercator"}
 		"america": {name: "orthographic", angle: 90, rotate:[100,-10]}
 		"africa": {name: "orthographic", angle: 90, rotate:[-10,0]}
-		"emed": {name: "orthographic", angle: 90}
-		"europe": {name: "orthographic", angle: 90}
-		"seasia": {name: "orthographic", angle: 90}
-		"wpacific": {name: "orthographic", angle: 90}
+		"emed": {name: "orthographic", angle: 90, rotate:[-30,-20]}
+		"europe": {name: "orthographic", angle: 90, rotate:[0,-40]}
+		"seasia": {name: "orthographic", angle: 90, rotate:[-100,-20]}
+		"wpacific": {name: "orthographic", angle: 90, rotate:[-150,20]}
 		
 	}
 	curProjection = null
@@ -164,10 +164,16 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 				country.visible = false
 		console.log "num circles " +countryCircleData.length
 		console.log ranges
+		###
 		min = ranges['avg' + statistic]['min']
 		max = ranges['avg' + statistic]['max']
 		diffMin = ranges['diff' + statistic]['min']
 		diffMax = ranges['diff' + statistic]['max']
+		###
+		min = ranges['avg'][0]
+		max = ranges['avg'][1]
+		diffMin = ranges['diff'][0]
+		diffMax = ranges['diff'][1]
 		femaleColor = d3.rgb(252, 141, 90)
 		maleColor = d3.rgb(145,191, 219)
 		neutralColor = d3.rgb(255,255,191)
@@ -188,9 +194,13 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 			).style('fill', neutralColor.toString())
 
 		circles.transition().duration(1000).attr('class',(d) ->
-			d.country.replace(/[\s\(\)]/g,"_") + " id"+d.id
+			d.country.replace(/[\s\(\)]/g,"_") + " id"+d.id + " " + (if d.visible then "visible" else "hidden")
 		).attr('r',(d) ->
-			d.r = circleScale(d['avg' + statistic])
+			r = circleScale(d['avg' + statistic])
+			if r < 0
+				r = 0
+			d.r = r
+
 		).style('fill',(d) ->
 			value = d['diff' + statistic]
 			if value < 0
@@ -205,6 +215,7 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 			else
 				return 0
 		)
+
 
 		circles.on('mouseover', showTooltip).on('mouseout',hideTooltip)
 		
@@ -232,15 +243,15 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 			return d.y
 		)
 	showTooltip = (d,i) ->
-		return
 		that = d3.select('circle.id'+d.id)
 		that.classed('hover',true)
-		#that.moveToFront()
+		that.moveToFront()
 		mapTooltip.showTooltip(d,i)
 	hideTooltip = (d,i) ->
 		that = d3.select('circle.id'+d.id)
 
 		that.classed('hover',false)
+		mapTooltip.hideTooltip(d,i)
 	transitionRotation = (rotation) ->
 		countryPaths.transition().duration(400).delay(10)
 			.attrTween("d",rotationTween( curRotation, rotation))

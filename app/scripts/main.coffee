@@ -5,6 +5,7 @@ define ["d3","jquery","lodash", "topojson", "map", "lists", "controls"], (d3,$,_
 	ranges = {}
 	countryCodes = null
 	codeLookup = {"code":{}, "country" :{},"alpha2":{}}
+	features = null
 	initMain = () ->
 		map.init('.map',loadCountryCodes)
 		controls.init('.controls',redo)
@@ -15,8 +16,35 @@ define ["d3","jquery","lodash", "topojson", "map", "lists", "controls"], (d3,$,_
 		region = controls.getCurrentRegion()
 		console.log stat
 		console.log region
-		map.countryCircles(ranges,stat,region)
-		lists.showLists(stat)
+		
+		maxAvg = d3.max(features, (feature) ->
+			if region.id is 'all' or region.id is feature.region
+				return feature['avg' + stat.id]
+			else
+				return Number.MIN_VALUE
+		)
+		minAvg = d3.min(features, (feature) ->
+			if region.id is 'all' or region.id is feature.region
+				return feature['avg' + stat.id]
+			else
+				return Number.MAX_VALUE
+		)
+		maxDiff = d3.max(features, (feature) ->
+			if region.id is 'all' or region.id is feature.region
+				return feature['diff' + stat.id]
+			else
+				return Number.MIN_VALUE
+		)
+		minDiff = d3.min(features, (feature) ->
+			if region.id is 'all' or region.id is feature.region
+				return feature['diff' + stat.id]
+			else
+				return Number.MAX_VALUE
+		)
+
+		selectedRange = {diff: [minDiff, maxDiff], avg: [minAvg, maxAvg]}
+		map.countryCircles(selectedRange,stat,region)
+		lists.showLists(stat,region,selectedRange)
 	countriesCSVLoaded = (err, countryStats) ->
 		numericCols = [
 			"fObese","fOver", "mObese", "mOver",
@@ -75,13 +103,15 @@ define ["d3","jquery","lodash", "topojson", "map", "lists", "controls"], (d3,$,_
 
 		stat = 'Total'
 		countryFeatureData = map.assignCountryData(countryStats, codeLookup)
+		features = countryFeatureData
 		initStat = controls.getCurrentStat()
 		initRegion = controls.getCurrentRegion()
 		console.log initStat
 		console.log initRegion
-		map.countryCircles(ranges,initStat,initRegion)
 		lists.assignData(countryFeatureData)
-		lists.showLists(initStat)
+		redo()
+		#map.countryCircles(ranges,initStat,initRegion)
+		#lists.showLists(initStat)
 	displayTable = () ->
 		data = countryData
 
