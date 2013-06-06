@@ -6,12 +6,6 @@ define ["d3","jquery","lodash", "topojson", "map", "lists", "controls"], (d3,$,_
 	countryCodes = null
 	codeLookup = {"code":{}, "country" :{},"alpha2":{}}
 	features = null
-	initMain = () ->
-
-        map.init('.map',loadCountryCodes)
-		controls.init('.controls',redo)
-		console.log this
-		lists.init()
 	redo = () ->
 		stat = controls.getCurrentStat()
 		region = controls.getCurrentRegion()
@@ -46,6 +40,14 @@ define ["d3","jquery","lodash", "topojson", "map", "lists", "controls"], (d3,$,_
 		selectedRange = {diff: [minDiff, maxDiff], avg: [minAvg, maxAvg]}
 		map.countryCircles(selectedRange,stat,region)
 		lists.showLists(stat,region,selectedRange)
+	initMain = () ->
+
+        map.init('.map',loadCountryCodes)
+		#console.log redo
+		#redo()
+		controls.init('.controls',redo)
+		console.log this
+		lists.init()
 	countriesCSVLoaded = (err, countryStats) ->
 		numericCols = [
 			"fObese","fOver", "mObese", "mOver",

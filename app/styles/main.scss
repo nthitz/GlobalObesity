@@ -137,6 +137,32 @@ circle {
   background-color: rgba(255,255,255,0.6);
   border: 1px solid #eee;
   pointer-events: none;
+  .blocks {
+    position: relative;
+    .diff {
+      position: absolute;
+      &.male {
+        background-color: rgb(145,191, 219);
+      }
+      &.female {
+        background-color: rgb(252, 141, 90);
+      }
+      .lbl {
+        color: black;
+        font-size: 12px;
+      }
+    }
+
+    .male {
+      float: left;
+      color: rgb(145,191, 219);
+    }
+    .female {
+      float: right;
+      color: rgb(252, 141, 90);
+    }
+  }
+
 }
 
 @media screen and (-webkit-min-device-pixel-ratio:0) and (min-width: 1024px) {
