@@ -135,12 +135,17 @@ circle {
   width: 300px;
   text-align: center;
   background-color: rgba(255,255,255,0.6);
-  border: 1px solid #eee;
+  border: 1px solid #aaa;
   pointer-events: none;
+  .avgValue {
+    font-size: 12px;
+  }
   .blocks {
     position: relative;
     .diff {
       position: absolute;
+      height: 12px;
+      margin-top: 4px;
       &.male {
         background-color: rgb(145,191, 219);
       }
@@ -149,7 +154,8 @@ circle {
       }
       .lbl {
         color: black;
-        font-size: 12px;
+        font-size: 11px;
+        position: absolute;
       }
     }
 

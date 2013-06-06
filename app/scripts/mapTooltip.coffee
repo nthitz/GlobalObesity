@@ -3,7 +3,7 @@ define ["jquery", "d3"], ($,d3) ->
 	tooltipParts = {}
 	stat = null
 	hideTimeout = null
-	diffBlockScale = d3.scale.linear().domain([0,100]).range([0,100])
+	diffBlockScale = d3.scale.linear().domain([0,100]).range([0,190])
 	tooltipWidth = 300
 	init = (selector) ->
 		tooltip = d3.select(selector)
@@ -27,9 +27,11 @@ define ["jquery", "d3"], ($,d3) ->
 		
 		y = +circle.attr('cy')
 		r = +circle.attr('r')
+		###
 		x = 10
 		y = 10
 		r = 10
+		###
 		tooltipParts.country.text(d.country)
 		avg = d['avg' + stat]
 		diff = d['diff' + stat]
@@ -38,17 +40,21 @@ define ["jquery", "d3"], ($,d3) ->
 		barOffset = 0
 		l = tooltipWidth/2
 		barWidth = diffBlockScale(Math.abs(diff))
+		tipXPos = 0
+		tooltipParts.diffLbl.text("+" + pctString(Math.abs(diff)))
 		if diff < 0
 			l -= barWidth
+			tipXPos =  -2 - $('.mapTooltip .lbl').width()
 			tooltipParts.diff.classed('male',true)
 			tooltipParts.diff.classed('female',false)
 		else
+			tipXPos =  + barWidth + 2
 			tooltipParts.diff.classed('male',false)
 			tooltipParts.diff.classed('female',true)
 
 		tooltipParts.diff.style('left', l + 'px').style('width',barWidth + 'px')
 		tooltipParts.avg.text("Country Avg " + pctString(avg))
-		tooltipParts.diffLbl.text(pctString(diff))
+		tooltipParts.diffLbl.style('left',tipXPos + "px")
 		tooltipParts.male.text(pctString(m))
 		tooltipParts.female.text(pctString(f))
 		ttWidth = $('.mapTooltip').width()
@@ -58,7 +64,6 @@ define ["jquery", "d3"], ($,d3) ->
 	pctString = (string) ->
 		return Math.round(string * 10) / 10 + '%'
 	hideTooltip = (d,i) ->
-		return
 		clearTimeout(hideTimeout)
 		hideTimeout = setTimeout(() ->
 			tooltip.style('opacity',0)

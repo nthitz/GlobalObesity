@@ -245,7 +245,7 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 	showTooltip = (d,i) ->
 		that = d3.select('circle.id'+d.id)
 		that.classed('hover',true)
-		that.moveToFront()
+		#that.moveToFront()
 		mapTooltip.showTooltip(d,i)
 	hideTooltip = (d,i) ->
 		that = d3.select('circle.id'+d.id)
