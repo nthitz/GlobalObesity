@@ -1,11 +1,12 @@
-define ["jquery", "d3"], ($,d3) ->
+#define ["jquery", "d3"], ($,d3) ->
+class MapTooltip
 	tooltip = null
 	tooltipParts = {}
 	stat = null
 	hideTimeout = null
 	diffBlockScale = d3.scale.linear().domain([0,100]).range([0,190])
 	tooltipWidth = 300
-	init = (selector) ->
+	init: (selector) ->
 		tooltip = d3.select(selector)
 		tooltipParts.country = tooltip.append('div').attr('class','countryName')
 		tooltipParts.avg = tooltip.append('div').attr('class','avgValue')
@@ -15,9 +16,9 @@ define ["jquery", "d3"], ($,d3) ->
 		tooltipParts.diffLbl = tooltipParts.diff.append('div').attr('class','lbl')
 		tooltipParts.male = block.append('div').attr('class','male')
 		tooltipParts.female = block.append('div').attr('class','female')
-	setStat = (_stat) ->
+	setStat:(_stat) ->
 		stat = _stat
-	showTooltip = (d,i) ->
+	showTooltip: (d,i) ->
 		clearTimeout(hideTimeout)
 		#console.log('map tt show')
 		#console.log(d)
@@ -63,15 +64,16 @@ define ["jquery", "d3"], ($,d3) ->
 		#tooltipParts.avg.text(d.)
 	pctString = (string) ->
 		return Math.round(string * 10) / 10 + '%'
-	hideTooltip = (d,i) ->
+	hideTooltip: (d,i) ->
 		clearTimeout(hideTimeout)
 		hideTimeout = setTimeout(() ->
 			tooltip.style('opacity',0)
 		, 200)
-	return {
+###	return {
 		init: init
 		showTooltip: showTooltip
 		hideTooltip: hideTooltip
 		setStat : setStat
 
-	}
+	}###
+window.MapTooltip = MapTooltip

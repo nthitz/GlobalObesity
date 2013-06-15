@@ -1,4 +1,4 @@
-define [], ->
+class Controls
 	regions = [
 		{id: "africa", lbl:"Africa"}
 		{id: "america", lbl: "Americas"}
@@ -16,7 +16,7 @@ define [], ->
 	currentStat =  null
 	currentRegion = null
 	redoCallback = null
-	init = (selector,_redoCallback) ->
+	init: (selector,_redoCallback) ->
 		redoCallback = _redoCallback
 		regionList = d3.select(selector).append('ul').attr('class','region')
 		regionOptions = []
@@ -50,8 +50,8 @@ define [], ->
 		currentStat = stats[0]
 		currentRegion = regionOptions[0]
 
-		d3.selectAll('ul').selectAll('li').on('click', clickOption)
-	clickOption = (d,i) ->
+		d3.selectAll('ul').selectAll('li').on('click', @clickOption)
+	clickOption: (d,i) ->
 		if d3.select(this).classed('active')
 			return
 		console.log d
@@ -73,13 +73,16 @@ define [], ->
 		)
 		console.log(currentStat + " " + currentRegion)
 		redoCallback()
-	getCurrentStat = () ->
+	getCurrentStat: () ->
 		return currentStat
-	getCurrentRegion = () ->
+	getCurrentRegion: () ->
 		return currentRegion
+	###
 	return {
 		init: init
 		getCurrentRegion : getCurrentRegion
 		getCurrentStat : getCurrentStat
 
 	}
+	###
+window.Controls = Controls

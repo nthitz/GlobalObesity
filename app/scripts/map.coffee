@@ -1,4 +1,5 @@
-define ["d3",'mapTooltip'], (d3,mapTooltip) ->
+#define ["d3",'mapTooltip'], (d3,mapTooltip) ->
+class Map
 	d3.selection.prototype.moveToFront = () ->
 		return this.each(() ->
 			this.parentNode.appendChild(this);
@@ -22,6 +23,7 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 	projectionName = "mercator"
 	curRotation = null
 	dotForce = null
+	mapTooltip = new MapTooltip()
 	countryLookups = {
 		"Trinidad & Tobago" : "Trinidad and Tobago"
 		"USA": "United States"
@@ -35,9 +37,9 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 		"orthographic": d3.geo.orthographic().scale(250).translate([width/2, height/2]).clipAngle(90)
 	}
 	projections = {
-		"all": {name: "mercator"}
-		"america": {name: "orthographic", angle: 90, rotate:[100,-10]}
-		"africa": {name: "orthographic", angle: 90, rotate:[-10,0]}
+		"all": {name: "mercator", p:d3.geo.mercator().scale(70).translate([width/2, height/2]).clipAngle(180)}
+		"america": {name: "orthographic", angle: 90, rotate:[100,-10], p:d3.geo.orthographic().scale(250).translate([width/2, height/2]).clipAngle(90).rotate([100,-10])}
+		"africa": {name: "orthographic", angle: 90, rotate:[-10,0], p:d3.geo.orthographic().scale(240).translate([width/2, height/2]).clipAngle(90).rotate([-10,0])}
 		"emed": {name: "orthographic", angle: 90, rotate:[-30,-20]}
 		"europe": {name: "orthographic", angle: 90, rotate:[0,-40]}
 		"seasia": {name: "orthographic", angle: 90, rotate:[-100,-20]}
@@ -45,7 +47,7 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 		
 	}
 	curProjection = null
-	init = (selector,loadedCallback) ->
+	init: (selector,loadedCallback) ->
 		console.log(mapTooltip)
 		d3.select(selector).append('div').attr('class','mapTooltip')
 		mapTooltip.init('.mapTooltip')
@@ -86,7 +88,7 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 				console.log 'no callback'
 				loadedCallback()
 		);
-	assignCountryData = (data, codeLookup) ->
+	assignCountryData: (data, codeLookup) ->
 		countryCircleData = []
 		for country in data
 			countryName = country.country.replace(/\([^)]+\)/g,'').trim()
@@ -111,13 +113,24 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 				codedGeomData.Long = lookup.Long
 				countryCircleData.push codedGeomData
 		return countryCircleData
-	countryCircles = (ranges, statistic,region) ->
+	countryCircles: (ranges, statistic,region) ->
 		console.log 'circles '
 		console.log region
 		region = region.id
 		statistic = statistic.id
 		newProjection = projections[region]
 		curRotation = [0,0]
+		console.log newProjection
+		if curProjection.p isnt newProjection.p
+			console.log 'tween'
+			console.log curProjection
+			console.log newProjection
+			countryPaths.transition().duration(1000)
+				.attrTween("d",projectionTween(curProjection, newProjection))
+		
+		
+		curProjection = newProjection
+		###
 		if newProjection.name isnt projectionName
 			if newProjection.name is 'orthographic'
 				console.log 'rotating to '
@@ -130,6 +143,7 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 			#same projection type
 			if newProjection.name is 'orthographic'
 				transitionRotation(newProjection.rotate)
+		###
 		###
 		countryPathTween = 0
 		if curProjection isnt projections[region]
@@ -217,7 +231,7 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 		)
 
 
-		circles.on('mouseover', showTooltip).on('mouseout',hideTooltip)
+		circles.on('mouseover', @showTooltip).on('mouseout',@hideTooltip)
 		
 		dotForce = d3.layout.force().nodes(countryCircleData).links([]).size([width,height])
 			.gravity(0)
@@ -242,12 +256,12 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 		).attr('cy', (d) ->
 			return d.y
 		)
-	showTooltip = (d,i) ->
+	showTooltip:(d,i) ->
 		that = d3.select('circle.id'+d.id)
 		that.classed('hover',true)
 		#that.moveToFront()
 		mapTooltip.showTooltip(d,i)
-	hideTooltip = (d,i) ->
+	hideTooltip: (d,i) ->
 		that = d3.select('circle.id'+d.id)
 
 		that.classed('hover',false)
@@ -293,18 +307,42 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 				if typeof p is 'undefined'
 					return 'M0,0 z'
 				return p(d)
-	projectionTween = (projection0, projection1,clipAngle0, clipAngle1) ->
+	projectionTween = (projectionA, projectionB,clipAngle0, clipAngle1) ->
 		return (d) ->
 			t = 0;
-			r = d3.interpolate(projection0.rotate(), projection1.rotate());
+			aType = projectionA.name
+			bType = projectionB.name
+			projection0 = projectionA.p
+			projection1 = projectionB.p
+			ta = projection0.translate()
+			tb = projection1.translate()
+			ra = projection0.rotate()
+			rb = projection1.rotate()
+			ca = projection0.center()
+			cb = projection1.center()
+			scaleA = projection0.scale()
+			scaleB = projection1.scale()
+			clipA = projection0.clipAngle()
+			clipB = projection1.clipAngle()
+			#r = d3.interpolate(projection0.rotate(), projection1.rotate());
 			#center = d3.interpolate(projection0.center(),projection1.center())
 			
+			startP = null
+			endP = null
+			startP = d3.geo[aType]().scale(scaleA).clipAngle(clipA)
+			endP = d3.geo[bType]().scale(scaleB).clipAngle(clipB)
+
 			project = (λ, φ) ->
 				λ *= 180 / Math.PI
 				φ *= 180 / Math.PI;
-				p0 = projection0([λ, φ])
-				p1 = projection1([λ, φ]);
+				p0 = startP([λ, φ])
+				p1 = endP([λ, φ]);
 				return [(1 - t) * p0[0] + t * p1[0], (1 - t) * -p0[1] + t * -p1[1]];
+			raw = (λ, φ) ->
+				pa = projection0([λ *= 180 / Math.PI, φ *= 180 / Math.PI])
+				pb = projection1([λ, φ]);
+				return [(1 - t) * pa[0] + t * pb[0], (t - 1) * pa[1] - t * pb[1]];
+			
 			projection = d3.geo.projection(project)
 				.scale(1)
 				.translate([width / 2, height / 2]);
@@ -316,7 +354,13 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 				.projection(projection)
 			(_) ->
 				t = _;
-				angle = clipAngle0 * (1-t) + clipAngle1 * t
+				projection.center([(1 - t) * ca[0] + t * cb[0], (1 - t) * ca[1] + t * cb[1]])
+				projection.translate([(1 - t) * ta[0] + t * tb[0], (1 - t) * ta[1] + t * tb[1]])
+				projection.rotate([(1 - t) * ra[0] + t * rb[0], (1 - t) * ra[1] + t * rb[1]])
+
+				#projection.scale((1 - t) * scaleA + t * scaleB)
+				#projection.scale()
+				angle = clipA * (1-t) + clipB * t
 				projection.clipAngle(angle)
 
 				#rotationX = rotation0[0] * (1-t) + rotation1[0] * t
@@ -331,9 +375,34 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 				if typeof p is 'undefined'
 					return 'M0,0 z'
 				return p;
-		
-	  
+	interpolatedProjection = (a, b) ->
+		raw =(λ, φ) ->
+			pa = a([λ *= 180 / Math.PI, φ *= 180 / Math.PI])
+			pb = b([λ, φ]);
+			return [(1 - α) * pa[0] + α * pb[0], (α - 1) * pa[1] - α * pb[1]];
+	
+		projection = d3.geo.projection(raw).scale(1)
+		center = projection.center
+		translate = projection.translate
+		α = null
+		projection.alpha = (_) ->
+			if !arguments.length then return α;
+			α = +_;
+			ca = a.center()
+			cb = b.center()
+			ta = a.translate()
+			tb = b.translate()
+			center([(1 - α) * ca[0] + α * cb[0], (1 - α) * ca[1] + α * cb[1]]);
+			translate([(1 - α) * ta[0] + α * tb[0], (1 - α) * ta[1] + α * tb[1]]);
+			return projection;
+		delete projection.scale;
+		delete projection.translate;
+		delete projection.center;
+		return d3.geo.path().projection(projection)
+		return projection.alpha(0);
 
+	
+###
 	return {
 		init: init
 		assignCountryData: assignCountryData
@@ -341,3 +410,5 @@ define ["d3",'mapTooltip'], (d3,mapTooltip) ->
 		showTooltip: showTooltip
 		hideTooltip:hideTooltip
 	}
+	###
+window.Map = Map

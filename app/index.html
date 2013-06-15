@@ -42,20 +42,19 @@
         </script>
 
         <!-- build:js scripts/main.js -->
-        <!--
+        
         <script src="bower_components/jquery/jquery.js"></script>
-        <script src="bower_components/d3/d3 .js"></script>
-        <script src="bower_components/topojson/topojson.js"></script>-->
+        <script src="bower_components/d3/d3.js"></script>
+        <script src="bower_components/topojson/topojson.js"></script>
+        <script src="bower_components/lodash/lodash.js"></script>
         <!-- endbuild -->
 
         <!-- build:js(.tmp) scripts/coffee.js -->
-        <script src="bower_components/requirejs/require.js" ></script>
-        <script src="config.js"></script>
-        <script>
-            require(["main"])
-        </script>
-<!--        <script src="scripts/main.js"></script>
-        <script src="scripts/map.js"></script>-->
+        <script src="scripts/controls.js"></script>
+        <script src="scripts/lists.js"></script>
+        <script src="scripts/mapTooltip.js"></script>
+        <script src="scripts/map.js"></script>
+        <script src="scripts/main.js"></script>
         <!-- endbuild -->
 </body>
 </html>

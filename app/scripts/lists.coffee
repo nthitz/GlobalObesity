@@ -1,4 +1,4 @@
-define ["map"] , (map) ->
+class Lists
 	initListArray = [
 		{var: "avg", order: 'd', title: "Most %stat% countries"}
 		{var: "diff", order: "a", title: "Countries with more male %stat% than female"}
@@ -10,15 +10,16 @@ define ["map"] , (map) ->
 	countryData = null
 	titles = null;
 	uls = null
-	init = () ->
+	init: (map) ->
+		@map = map
 		listData = initListArray
 		lists = d3.select('.viz').selectAll('.list').data(listData)
 		lists.enter().append('div').attr('class','list')
 		titles = lists.append('div').attr('class','list-title')
 		uls = lists.append('ol')
-	assignData = (data) ->
+	assignData: (data) ->
 		countryData = data
-	showLists = (statistic,region) ->
+	showLists: (statistic,region) ->
 		for list in listData
 			list.data = []
 			for datum in countryData
@@ -50,10 +51,11 @@ define ["map"] , (map) ->
 			dispVar = Math.round(d.listVar * 100) / 100
 			return d.displayName + " " + dispVar
 		)
-		lis.on('mouseover',liHover).on('mouseout',liStopHover)
-	liHover = (d,i) ->
-		map.showTooltip(d,i)
-	liStopHover = (d,i) ->
-		map.hideTooltip(d,i)
+		lis.on('mouseover',@liHover).on('mouseout',@liStopHover)
+	liHover: (d,i) =>
+		@map.showTooltip(d,i)
+	liStopHover: (d,i) =>
+		@map.hideTooltip(d,i)
 
-	return {init: init, assignData:assignData, showLists: showLists}
+	#return {init: init, assignData:assignData, showLists: showLists}
+window.Lists = Lists
