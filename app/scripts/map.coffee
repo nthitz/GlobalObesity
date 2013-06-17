@@ -40,10 +40,10 @@ class Map
 		"all": {name: "mercator", p:d3.geo.mercator().scale(70).translate([width/2, height/2]).clipAngle(180)}
 		"america": {name: "orthographic", angle: 90, rotate:[100,-10], p:d3.geo.orthographic().scale(250).translate([width/2, height/2]).clipAngle(90).rotate([100,-10])}
 		"africa": {name: "orthographic", angle: 90, rotate:[-10,0], p:d3.geo.orthographic().scale(240).translate([width/2, height/2]).clipAngle(90).rotate([-10,0])}
-		"emed": {name: "orthographic", angle: 90, rotate:[-30,-20]}
-		"europe": {name: "orthographic", angle: 90, rotate:[0,-40]}
-		"seasia": {name: "orthographic", angle: 90, rotate:[-100,-20]}
-		"wpacific": {name: "orthographic", angle: 90, rotate:[-150,20]}
+		"emed": {name: "orthographic", angle: 90, rotate:[-30,-20], p:d3.geo.orthographic().scale(250).translate([width/2, height/2]).clipAngle(90).rotate([-30,-20])}
+		"europe": {name: "orthographic", angle: 90, rotate:[0,-40], p:d3.geo.orthographic().scale(250).translate([width/2, height/2]).clipAngle(90).rotate([0,-40])}
+		"seasia": {name: "orthographic", angle: 90, rotate:[-100,-20], p:d3.geo.orthographic().scale(250).translate([width/2, height/2]).clipAngle(90).rotate([-100,-20])}
+		"wpacific": {name: "orthographic", angle: 90, rotate:[-150,20], p:d3.geo.orthographic().scale(250).translate([width/2, height/2]).clipAngle(90).rotate([-150,20])}
 		
 	}
 	curProjection = null
